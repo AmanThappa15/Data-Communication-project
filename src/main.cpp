@@ -1,4 +1,6 @@
+
 #include <iostream>
+#include <string>
 #include "data/data_generator.h"
 
 int main()
@@ -7,8 +9,7 @@ int main()
 
     std::string data = generateData(length);
 
-    std::cout << "===== Digital Data Generator =====\n";
-    std::cout << "Generated Data: " << data << '\n';
+    std::cout << "Generated binary data: " << data << '\n';
 
     return 0;
 }
