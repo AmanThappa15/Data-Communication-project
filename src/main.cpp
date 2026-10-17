@@ -8,17 +8,18 @@ int main()
 {
     int length = 16;
 
+    // Generate random binary data using your existing function
     std::string data = generateData(length);
 
-    // Display the generated binary data
     std::cout << "Generated binary data: " << data << '\n';
 
-    // Find and display the longest palindrome
+    // Find the longest pallindromic substring
     std::string palindrome = longestPalindrome(data);
 
     std::cout << "Longest palindrome: " << palindrome << '\n';
-    std::cout << "Palindrome length: " << palindrome.length() << '\n';
+    std::cout << "Pallindrome length: " << palindrome.length() << '\n';
 
     return 0;
 }
+
 
