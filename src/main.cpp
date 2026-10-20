@@ -5,6 +5,7 @@
 #include "data/data_generator.h"
 #include "pallindrome/pallindrome.h"
 #include "line_coding.h"
+#include "pcm/pcm.h"
 
 int main()
 {
@@ -12,7 +13,7 @@ int main()
 
     std::cout << "===== DIGITAL SIGNAL ENCODER AND DECODER =====\n";
     std::cout << "1. Digital input\n";
-    std::cout << "2. Analog input (PCM/DM - coming next)\n";
+   std::cout << "2. Analog input (PCM Encoder/Decoder)\n";
     std::cout << "Choose input type: ";
 
     if (!(std::cin >> inputChoice))
@@ -163,11 +164,10 @@ else
 
         std::cout << '\n';
     }
-    else if (inputChoice == 2)
-    {
-        std::cout
-            << "\nAnalog input will be implemented with PCM/DM later.\n";
-    }
+   else if (inputChoice == 2)
+{
+    runPCM();
+}
     else
     {
         std::cout << "Invalid input choice.\n";
