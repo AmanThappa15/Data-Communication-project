@@ -118,11 +118,43 @@ int main()
             signal = encodeDifferentialManchester(data);
             schemeName = "Differential Manchester";
         }
-       else
+
+else
+{
+
+int scrambleChoice;
+
+std::cout << "\nChoose AMI scrambling option:\n";
+std::cout << "1. B8ZS\n";
+std::cout << "2. HDB3\n";
+std::cout << "3. Normal AMI\n";
+std::cout << "Choice: ";
+
+if (!(std::cin >> scrambleChoice) ||
+    scrambleChoice < 1 || scrambleChoice > 3)
+{
+    std::cout << "Invalid scrambling choice.\n";
+    return 1;
+}
+
+if (scrambleChoice == 1)
+{
+    signal = encodeB8ZS(data);
+    schemeName = "AMI with B8ZS";
+}
+else if (scrambleChoice == 2)
+{
+    signal = encodeHDB3(data);
+    schemeName = "AMI with HDB3";
+}
+else
 {
     signal = encodeAMI(data);
     schemeName = "AMI";
 }
+
+}
+
 
         std::cout << schemeName << " signal: ";
 
