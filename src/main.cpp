@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <string>
 #include <vector>
@@ -9,36 +8,141 @@
 
 int main()
 {
-    int length = 16;
+    int inputChoice;
 
-    std::string data = generateData(length);
-    std::string fourZeros = generateDataWithZeros(length, 4);
-    std::string eightZeros = generateDataWithZeros(length, 8);
+    std::cout << "===== DIGITAL SIGNAL ENCODER AND DECODER =====\n";
+    std::cout << "1. Digital input\n";
+    std::cout << "2. Analog input (PCM/DM - coming next)\n";
+    std::cout << "Choose input type: ";
 
-    std::cout << "Random data: " << data << '\n';
-    std::cout << "Data with four zeros: " << fourZeros << '\n';
-    std::cout << "Data with eight zeros: " << eightZeros << '\n';
+    if (!(std::cin >> inputChoice))
+    {
+        std::cout << "Invalid input.\n";
+        return 1;
+    }
 
-    std::string palindrome = longestPalindrome(data);
-    std::cout << "Longest palindrome: " << palindrome << '\n';
-    std::cout << "Palindrome length: " << palindrome.length() << '\n';
+    if (inputChoice == 1)
+    {
+        int dataChoice;
+        int length;
 
-    std::string testData = "10110010";
+        std::cout << "\n1. Completely random binary data\n";
+        std::cout << "2. Binary data with four consecutive zeros\n";
+        std::cout << "3. Binary data with eight consecutive zeros\n";
+        std::cout << "Choose data type: ";
 
-    std::vector<int> nrzl = encodeNRZL(testData);
-    std::vector<int> nrzi = encodeNRZI(testData);
+        if (!(std::cin >> dataChoice) ||
+            dataChoice < 1 || dataChoice > 3)
+        {
+            std::cout << "Invalid data choice.\n";
+            return 1;
+        }
 
-    std::cout << "\nTest data: " << testData << '\n';
+        std::cout << "Enter data length (minimum 1): ";
 
-    std::cout << "NRZ-L: ";
-    for (int level : nrzl)
-        std::cout << level << ' ';
-    std::cout << '\n';
+        if (!(std::cin >> length) || length < 1)
+        {
+            std::cout << "Invalid length.\n";
+            return 1;
+        }
 
-    std::cout << "NRZ-I: ";
-    for (int level : nrzi)
-        std::cout << level << ' ';
-    std::cout << '\n';
+        if (dataChoice == 2 && length < 4)
+        {
+            std::cout << "Length must be at least 4.\n";
+            return 1;
+        }
+
+        if (dataChoice == 3 && length < 8)
+        {
+            std::cout << "Length must be at least 8.\n";
+            return 1;
+        }
+
+        std::string data;
+
+        if (dataChoice == 1)
+            data = generateData(length);
+        else if (dataChoice == 2)
+            data = generateDataWithZeros(length, 4);
+        else
+            data = generateDataWithZeros(length, 8);
+
+        std::cout << "\nDigital data stream: "
+                  << data << '\n';
+
+        std::string palindrome = longestPalindrome(data);
+
+        std::cout << "Longest palindrome: "
+                  << palindrome << '\n';
+
+        std::cout << "Palindrome length: "
+                  << palindrome.length() << '\n';
+
+        int codingChoice;
+
+        std::cout << "\nChoose line coding scheme:\n";
+        std::cout << "1. NRZ-L\n";
+        std::cout << "2. NRZ-I\n";
+        std::cout << "3. Manchester\n";
+        std::cout << "4. Differential Manchester\n";
+        std::cout << "5. AMI\n";
+        std::cout << "Choice: ";
+
+        if (!(std::cin >> codingChoice) ||
+            codingChoice < 1 || codingChoice > 5)
+        {
+            std::cout << "Invalid coding choice.\n";
+            return 1;
+        }
+
+        std::vector<int> signal;
+        std::string schemeName;
+
+        if (codingChoice == 1)
+        {
+            signal = encodeNRZL(data);
+            schemeName = "NRZ-L";
+        }
+        else if (codingChoice == 2)
+        {
+            signal = encodeNRZI(data);
+            schemeName = "NRZ-I";
+        }
+        else if (codingChoice == 3)
+        {
+            signal = encodeManchester(data);
+            schemeName = "Manchester";
+        }
+        else if (codingChoice == 4)
+        {
+            signal = encodeDifferentialManchester(data);
+            schemeName = "Differential Manchester";
+        }
+       else
+{
+    signal = encodeAMI(data);
+    schemeName = "AMI";
+}
+
+        std::cout << schemeName << " signal: ";
+
+        for (int level : signal)
+            std::cout << level << ' ';
+
+        std::cout << '\n';
+    }
+    else if (inputChoice == 2)
+    {
+        std::cout
+            << "\nAnalog input will be implemented with PCM/DM later.\n";
+    }
+    else
+    {
+        std::cout << "Invalid input choice.\n";
+        return 1;
+    }
 
     return 0;
 }
+
+

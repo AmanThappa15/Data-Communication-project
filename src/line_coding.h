@@ -4,12 +4,11 @@
 
 #include <string>
 #include <vector>
-
-// NRZ-L encoding: 0 = -1, 1 = +1
 std::vector<int> encodeNRZL(const std::string& data);
-
-// NRZ-I encoding: a 1 causes a transition
 std::vector<int> encodeNRZI(const std::string& data);
+std::vector<int> encodeManchester(const std::string& data);
+std::vector<int> encodeDifferentialManchester(const std::string& data);
+std::vector<int> encodeAMI(const std::string& data);
 
 #endif
 
