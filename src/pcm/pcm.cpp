@@ -23,8 +23,6 @@ void runPCM()
     std::vector<int> levels(n);
     std::vector<std::string> codes(n);
     std::vector<double> reconstructed(n);
-
-    // Read analog sample values
     for (int i = 0; i < n; i++)
     {
         std::cout << "Sample " << i + 1
@@ -38,11 +36,8 @@ void runPCM()
             return;
         }
     }
-
-    // PCM ENCODER
     for (int i = 0; i < n; i++)
     {
-        // Divide the input range into 8 levels
         int level = static_cast<int>(
             std::floor((samples[i] + 10.0) / 2.5)
         );
@@ -51,8 +46,6 @@ void runPCM()
             level = 7;
 
         levels[i] = level;
-
-        // Convert level number into a 3-bit binary code
         codes[i] = std::string(3, '0');
 
         for (int bit = 2; bit >= 0; bit--)
@@ -73,7 +66,7 @@ void runPCM()
                   << codes[i] << '\n';
     }
 
-    // PCM DECODER
+
     for (int i = 0; i < n; i++)
     {
         int level = 0;
@@ -81,7 +74,7 @@ void runPCM()
         for (char bit : codes[i])
             level = level * 2 + (bit - '0');
 
-        // Reconstruct using the middle of each quantization interval
+
         reconstructed[i] = -8.75 + level * 2.5;
     }
 
@@ -97,4 +90,32 @@ void runPCM()
 
     std::cout << "\nBits per sample: 3\n";
     std::cout << "Total encoded bits: " << n * 3 << '\n';
+    std::cout << "\n--- PCM DECODER STAIRCASE SIGNAL ---\n";
+
+    for (int i = 0; i < n; i++)
+    {
+        int position = static_cast<int>(
+            (reconstructed[i] + 10.0) * 2.0
+        );
+
+        if (position < 0)
+            position = 0;
+        if (position > 40)
+            position = 40;
+
+        std::cout << "Sample " << i + 1 << ": ";
+
+        for (int j = 0; j < position; j++)
+            std::cout << ' ';
+
+        std::cout << "*  " << reconstructed[i] << '\n';
+
+        if (i < n - 1)
+        {
+            std::cout << "          ";
+            for (int j = 0; j < position; j++)
+                std::cout << '-';
+            std::cout << "|\n";
+        }
+    }
 }
