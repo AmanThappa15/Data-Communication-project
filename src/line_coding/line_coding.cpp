@@ -9,6 +9,7 @@ std::vector<int> encodeNRZL(const std::string& data)
     for (char bit : data)
     {
         if (bit == '0')
+        
             signal.push_back(-1);
         else if (bit == '1')
             signal.push_back(1);
@@ -126,51 +127,41 @@ std::vector<int> encodeB8ZS(const std::string& data)
     for (std::size_t i = 0; i < data.size();)
     {
         if (data[i] != '0' && data[i] != '1')
-        {
             throw std::invalid_argument(
                 "Input must contain only 0 and 1"
             );
-        }
-
 
         if (i + 8 <= data.size() &&
             data.compare(i, 8, "00000000") == 0)
         {
             if (lastPulse == 1)
             {
-                const int pattern[] =
-                    {0, 0, 0, 1, -1, 0, -1, 1};
-
+                // 000+-0-+
+                const int pattern[] = {0, 0, 0, 1, -1, 0, -1, 1};
                 for (int level : pattern)
                     signal.push_back(level);
-
                 lastPulse = 1;
             }
             else
             {
-                const int pattern[] =
-                    {0, 0, 0, -1, 1, 0, 1, -1};
-
+                // 000-+0+-
+                const int pattern[] = {0, 0, 0, -1, 1, 0, 1, -1};
                 for (int level : pattern)
                     signal.push_back(level);
-
                 lastPulse = -1;
             }
 
             i += 8;
         }
+        else if (data[i] == '1')
+        {
+            lastPulse = -lastPulse;
+            signal.push_back(lastPulse);
+            ++i;
+        }
         else
         {
-            if (data[i] == '1')
-            {
-                lastPulse = -lastPulse;
-                signal.push_back(lastPulse);
-            }
-            else
-            {
-                signal.push_back(0);
-            }
-
+            signal.push_back(0);
             ++i;
         }
     }
@@ -249,4 +240,41 @@ std::vector<int> encodeHDB3(const std::string& data)
     }
 
     return signal;
+}
+std::string decodeNRZL(const std::vector<int>& signal)
+{
+    std::string data;
+
+    for (int level : signal)
+    {
+        if (level == -1)
+            data += '0';
+        else if (level == 1)
+            data += '1';
+        else
+            throw std::invalid_argument("Invalid NRZ-L signal level");
+    }
+
+    return data;
+}
+
+std::string decodeNRZI(const std::vector<int>& signal)
+{
+    std::string data;
+    int previousLevel = -1;
+
+    for (int level : signal)
+    {
+        if (level != -1 && level != 1)
+            throw std::invalid_argument("Invalid NRZ-I signal level");
+
+        if (level != previousLevel)
+            data += '1';
+        else
+            data += '0';
+
+        previousLevel = level;
+    }
+
+    return data;
 }
